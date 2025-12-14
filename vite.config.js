@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  base: '/task-logger/',
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
@@ -10,8 +11,8 @@ export default defineConfig({
         name: 'Check-In Tracker',
         short_name: 'Check-In',
         description: 'Track your daily activities with timestamped check-ins',
-        theme_color: '#007aff',
-        background_color: '#f5f5f7',
+        theme_color: '#000000',
+        background_color: '#000000',
         display: 'standalone',
         icons: [
           {
