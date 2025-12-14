@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Check-In</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #f5f5f7;
+        padding: 20px;
+        padding-bottom: 100px;
+    }
+
+    .header {
+        margin-bottom: 30px;
+    }
+
+    h1 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #1d1d1f;
+        margin-bottom: 8px;
+    }
+
+    .date {
+        font-size: 15px;
+        color: #86868b;
+    }
+
+    .activities {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+
+    .activity-btn {
+        background: white;
+        border: none;
+        border-radius: 12px;
+        padding: 20px;
+        font-size: 16px;
+        font-weight: 500;
+        color: #1d1d1f;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .activity-btn:active {
+        transform: scale(0.96);
+        background: #f5f5f7;
+    }
+
+    .custom-checkin {
+        margin-bottom: 30px;
+    }
+
+    .custom-input {
+        width: 100%;
+        padding: 16px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 10px;
+    }
+
+    .custom-btn {
+        width: 100%;
+        padding: 16px;
+        background: #007aff;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .custom-btn:active {
+        background: #0051d5;
+    }
+
+    .history {
+        margin-top: 40px;
+    }
+
+    .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    h2 {
+        font-size: 22px;
+        font-weight: 600;
+        color: #1d1d1f;
+    }
+
+    .clear-btn {
+        background: none;
+        border: none;
+        color: #ff3b30;
+        font-size: 15px;
+        cursor: pointer;
+        padding: 8px 12px;
+    }
+
+    .day-section {
+        margin-bottom: 24px;
+    }
+
+    .day-header {
+        font-size: 17px;
+        font-weight: 600;
+        color: #1d1d1f;
+        margin-bottom: 12px;
+        padding-left: 4px;
+    }
+
+    .checkin-item {
+        background: white;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .checkin-time {
+        font-size: 15px;
+        font-weight: 600;
+        color: #007aff;
+        margin-bottom: 4px;
+    }
+
+    .checkin-activity {
+        font-size: 17px;
+        color: #1d1d1f;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #86868b;
+    }
+
+    .toast {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.85);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 20px;
+        font-size: 15px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+    }
+
+    .toast.show {
+        opacity: 1;
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="header">
+        <h1>Check-In</h1>
+        <div class="date" id="currentDate"></div>
+    </div>
+
+```
+<div class="activities">
+    <button class="activity-btn" onclick="quickCheckIn('🛏️ Woke Up')">🛏️ Woke Up</button>
+    <button class="activity-btn" onclick="quickCheckIn('🍳 Breakfast')">🍳 Breakfast</button>
+    <button class="activity-btn" onclick="quickCheckIn('💪 Gym')">💪 Gym</button>
+    <button class="activity-btn" onclick="quickCheckIn('🍽️ Lunch')">🍽️ Lunch</button>
+    <button class="activity-btn" onclick="quickCheckIn('🍷 Dinner')">🍷 Dinner</button>
+    <button class="activity-btn" onclick="quickCheckIn('😴 Bed')">😴 Bed</button>
+</div>
+
+<div class="custom-checkin">
+    <input type="text" class="custom-input" id="customActivity" placeholder="Or type your own activity...">
+    <button class="custom-btn" onclick="customCheckIn()">Check In</button>
+</div>
+
+<div class="history">
+    <div class="history-header">
+        <h2>Last 7 Days</h2>
+        <button class="clear-btn" onclick="clearHistory()">Clear All</button>
+    </div>
+    <div id="historyList"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    // Load check-ins from localStorage
+    function loadCheckIns() {
+        const stored = localStorage.getItem('checkIns');
+        return stored ? JSON.parse(stored) : [];
+    }
+
+    // Save check-ins to localStorage
+    function saveCheckIns(checkIns) {
+        localStorage.setItem('checkIns', JSON.stringify(checkIns));
+    }
+
+    // Show toast notification
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2000);
+    }
+
+    // Quick check-in with preset activity
+    function quickCheckIn(activity) {
+        const checkIns = loadCheckIns();
+        checkIns.push({
+            activity: activity,
+            timestamp: new Date().toISOString()
+        });
+        saveCheckIns(checkIns);
+        renderHistory();
+        showToast('Checked in!');
+    }
+
+    // Custom check-in
+    function customCheckIn() {
+        const input = document.getElementById('customActivity');
+        const activity = input.value.trim();
+        
+        if (!activity) {
+            return;
+        }
+
+        const checkIns = loadCheckIns();
+        checkIns.push({
+            activity: activity,
+            timestamp: new Date().toISOString()
+        });
+        saveCheckIns(checkIns);
+        input.value = '';
+        renderHistory();
+        showToast('Checked in!');
+    }
+
+    // Clear all history
+    function clearHistory() {
+        if (confirm('Delete all check-ins?')) {
+            localStorage.removeItem('checkIns');
+            renderHistory();
+            showToast('History cleared');
+        }
+    }
+
+    // Format date
+    function formatDate(date) {
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        const dateStr = date.toDateString();
+        
+        if (dateStr === today.toDateString()) {
+            return 'Today';
+        } else if (dateStr === yesterday.toDateString()) {
+            return 'Yesterday';
+        } else {
+            return date.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+    }
+
+    // Format time
+    function formatTime(date) {
+        return date.toLocaleTimeString('en-US', { 
+            hour: 'numeric', 
+            minute: '2-digit',
+            hour12: true 
+        });
+    }
+
+    // Render history
+    function renderHistory() {
+        const checkIns = loadCheckIns();
+        const historyList = document.getElementById('historyList');
+        
+        // Filter last 7 days
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        
+        const recentCheckIns = checkIns.filter(checkIn => {
+            return new Date(checkIn.timestamp) >= sevenDaysAgo;
+        });
+
+        if (recentCheckIns.length === 0) {
+            historyList.innerHTML = '<div class="empty-state">No check-ins yet. Tap a button above to get started!</div>';
+            return;
+        }
+
+        // Group by day
+        const byDay = {};
+        recentCheckIns.forEach(checkIn => {
+            const date = new Date(checkIn.timestamp);
+            const dayKey = date.toDateString();
+            
+            if (!byDay[dayKey]) {
+                byDay[dayKey] = [];
+            }
+            byDay[dayKey].push(checkIn);
+        });
+
+        // Sort days (most recent first)
+        const sortedDays = Object.keys(byDay).sort((a, b) => {
+            return new Date(b) - new Date(a);
+        });
+
+        // Render
+        let html = '';
+        sortedDays.forEach(dayKey => {
+            const date = new Date(dayKey);
+            const dayCheckIns = byDay[dayKey];
+            
+            // Sort check-ins within day (most recent first)
+            dayCheckIns.sort((a, b) => {
+                return new Date(b.timestamp) - new Date(a.timestamp);
+            });
+
+            html += `<div class="day-section">`;
+            html += `<div class="day-header">${formatDate(date)}</div>`;
+            
+            dayCheckIns.forEach(checkIn => {
+                const checkInDate = new Date(checkIn.timestamp);
+                html += `
+                    <div class="checkin-item">
+                        <div class="checkin-time">${formatTime(checkInDate)}</div>
+                        <div class="checkin-activity">${checkIn.activity}</div>
+                    </div>
+                `;
+            });
+            
+            html += `</div>`;
+        });
+
+        historyList.innerHTML = html;
+    }
+
+    // Update current date
+    function updateCurrentDate() {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        document.getElementById('currentDate').textContent = dateStr;
+    }
+
+    // Allow Enter key for custom check-in
+    document.getElementById('customActivity').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            customCheckIn();
+        }
+    });
+
+    // Initialize
+    updateCurrentDate();
+    renderHistory();
+</script>
+```
+
+</body>
+</html>
