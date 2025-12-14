@@ -166,6 +166,11 @@ function updateCurrentDate() {
     document.getElementById('currentDate').textContent = dateStr;
 }
 
+// Make functions globally accessible for inline onclick handlers
+window.quickCheckIn = quickCheckIn;
+window.customCheckIn = customCheckIn;
+window.clearHistory = clearHistory;
+
 // Allow Enter key for custom check-in
 document.getElementById('customActivity').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
