@@ -181,3 +181,40 @@ document.getElementById('customActivity').addEventListener('keypress', function(
 // Initialize
 updateCurrentDate();
 renderHistory();
+
+// PWA Update handling
+if ('serviceWorker' in navigator) {
+    let updateAvailable = false;
+
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' }).then(registration => {
+            registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+
+                newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        // New service worker installed, show update notification
+                        updateAvailable = true;
+                        showUpdateNotification();
+                    }
+                });
+            });
+        });
+    });
+
+    function showUpdateNotification() {
+        const notification = document.getElementById('updateNotification');
+        const updateBtn = document.getElementById('updateBtn');
+        const dismissBtn = document.getElementById('dismissBtn');
+
+        notification.classList.add('show');
+
+        updateBtn.addEventListener('click', () => {
+            window.location.reload();
+        });
+
+        dismissBtn.addEventListener('click', () => {
+            notification.classList.remove('show');
+        });
+    }
+}

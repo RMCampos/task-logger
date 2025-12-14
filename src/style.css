@@ -170,3 +170,72 @@ h2 {
 .toast.show {
     opacity: 1;
 }
+
+.update-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1c1c1e;
+    border: 1px solid #007aff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    z-index: 1000;
+    max-width: 90%;
+}
+
+.update-notification.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.update-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.update-message {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.update-btn {
+    background: #007aff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.update-btn:active {
+    background: #0051d5;
+}
+
+.update-dismiss {
+    background: none;
+    border: none;
+    color: #8e8e93;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.update-dismiss:active {
+    color: #ffffff;
+}

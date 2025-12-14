@@ -5,7 +5,7 @@ export default defineConfig({
   base: '/task-logger/',
   plugins: [
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['icon.svg'],
       manifest: {
         name: 'Check-In Tracker',
