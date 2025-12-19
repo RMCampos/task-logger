@@ -29,7 +29,7 @@ h1 {
 
 .activities {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     gap: 12px;
     margin-bottom: 30px;
 }
@@ -50,6 +50,11 @@ h1 {
 .activity-btn:active {
     transform: scale(0.96);
     background: #2c2c2e;
+}
+
+.activity-btn.clicked {
+    background: #2c2c2e;
+    color: #636366;
 }
 
 .custom-checkin {

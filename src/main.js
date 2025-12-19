@@ -9,6 +9,60 @@ function saveCheckIns(checkIns) {
     localStorage.setItem('checkIns', JSON.stringify(checkIns));
 }
 
+// Load clicked buttons for today
+function loadClickedButtons() {
+    const stored = localStorage.getItem('clickedButtonsToday');
+    if (!stored) {
+        return { date: getTodayDateString(), clicked: [] };
+    }
+
+    const data = JSON.parse(stored);
+    const today = getTodayDateString();
+
+    // If the stored data is from a previous day, reset it
+    if (data.date !== today) {
+        return { date: today, clicked: [] };
+    }
+
+    return data;
+}
+
+// Save clicked buttons to localStorage
+function saveClickedButtons(clickedData) {
+    localStorage.setItem('clickedButtonsToday', JSON.stringify(clickedData));
+}
+
+// Get today's date as a string (YYYY-MM-DD)
+function getTodayDateString() {
+    const now = new Date();
+    return now.toISOString().split('T')[0];
+}
+
+// Clear clicked buttons tracking (called when "Woke Up" is clicked)
+function clearClickedButtons() {
+    const emptyData = { date: getTodayDateString(), clicked: [] };
+    saveClickedButtons(emptyData);
+}
+
+// Mark a button as clicked (grayed out)
+function markButtonAsClicked(activity) {
+    const buttons = document.querySelectorAll('.activity-btn');
+    buttons.forEach(btn => {
+        // Check if the button text contains the activity text
+        if (btn.textContent === activity) {
+            btn.classList.add('clicked');
+        }
+    });
+}
+
+// Restore grayed out states for buttons clicked today
+function restoreClickedStates() {
+    const clickedData = loadClickedButtons();
+    clickedData.clicked.forEach(activity => {
+        markButtonAsClicked(activity);
+    });
+}
+
 // Show toast notification
 function showToast(message) {
     const toast = document.getElementById('toast');
@@ -21,12 +75,33 @@ function showToast(message) {
 
 // Quick check-in with preset activity
 function quickCheckIn(activity) {
+    // If it's "Woke Up", clear yesterday's tracking
+    if (activity === '🛏️ Woke Up') {
+        clearClickedButtons();
+        // Update all buttons to remove grayed state
+        document.querySelectorAll('.activity-btn').forEach(btn => {
+            btn.classList.remove('clicked');
+        });
+    }
+
+    // Save the check-in
     const checkIns = loadCheckIns();
     checkIns.push({
         activity: activity,
         timestamp: new Date().toISOString()
     });
     saveCheckIns(checkIns);
+
+    // Track that this button was clicked today
+    const clickedData = loadClickedButtons();
+    if (!clickedData.clicked.includes(activity)) {
+        clickedData.clicked.push(activity);
+        saveClickedButtons(clickedData);
+    }
+
+    // Gray out the button that was clicked
+    markButtonAsClicked(activity);
+
     renderHistory();
     showToast('Checked in!');
 }
@@ -181,6 +256,7 @@ document.getElementById('customActivity').addEventListener('keypress', function(
 // Initialize
 updateCurrentDate();
 renderHistory();
+restoreClickedStates();
 
 // PWA Update handling
 if ('serviceWorker' in navigator) {
