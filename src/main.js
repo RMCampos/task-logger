@@ -48,8 +48,9 @@ function clearClickedButtons() {
 function markButtonAsClicked(activity) {
     const buttons = document.querySelectorAll('.activity-btn');
     buttons.forEach(btn => {
-        // Check if the button text contains the activity text
-        if (btn.textContent === activity) {
+        // Check if the button text matches the activity text
+        // For feelings with reasons, we check if the button text is the base feeling
+        if (activity.startsWith(btn.textContent)) {
             btn.classList.add('clicked');
         }
     });
@@ -71,6 +72,44 @@ function showToast(message) {
     setTimeout(() => {
         toast.classList.remove('show');
     }, 2000);
+}
+
+let selectedFeeling = null;
+
+// Feeling check-in (opens modal)
+function feelingCheckIn(feeling) {
+    selectedFeeling = feeling;
+    const modal = document.getElementById('modalOverlay');
+    const title = document.getElementById('modalTitle');
+    const input = document.getElementById('feelingReason');
+    
+    title.textContent = `How are you feeling? (${feeling})`;
+    input.value = '';
+    modal.classList.add('show');
+    
+    // Focus input after small delay for mobile
+    setTimeout(() => input.focus(), 100);
+}
+
+// Close feeling modal
+function closeModal() {
+    const modal = document.getElementById('modalOverlay');
+    modal.classList.remove('show');
+    selectedFeeling = null;
+}
+
+// Submit feeling from modal
+function submitFeeling() {
+    const input = document.getElementById('feelingReason');
+    const reason = input.value.trim();
+    let activity = selectedFeeling;
+    
+    if (reason) {
+        activity = `${selectedFeeling} - ${reason}`;
+    }
+    
+    quickCheckIn(activity);
+    closeModal();
 }
 
 // Quick check-in with preset activity
@@ -170,12 +209,12 @@ function renderHistory() {
     const checkIns = loadCheckIns();
     const historyList = document.getElementById('historyList');
     
-    // Filter last 7 days
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    // Filter last 30 days
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     
     const recentCheckIns = checkIns.filter(checkIn => {
-        return new Date(checkIn.timestamp) >= sevenDaysAgo;
+        return new Date(checkIn.timestamp) >= thirtyDaysAgo;
     });
 
     if (recentCheckIns.length === 0) {
@@ -245,11 +284,21 @@ function updateCurrentDate() {
 window.quickCheckIn = quickCheckIn;
 window.customCheckIn = customCheckIn;
 window.clearHistory = clearHistory;
+window.feelingCheckIn = feelingCheckIn;
+window.closeModal = closeModal;
+window.submitFeeling = submitFeeling;
 
 // Allow Enter key for custom check-in
 document.getElementById('customActivity').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         customCheckIn();
+    }
+});
+
+// Allow Enter key for feeling reason
+document.getElementById('feelingReason').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        submitFeeling();
     }
 });
 
