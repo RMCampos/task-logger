@@ -57,6 +57,17 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="deleteModalOverlay">
+    <div class="modal">
+        <h3>Apagar check-in?</h3>
+        <p class="modal-description">Esta ação não pode ser desfeita.</p>
+        <div class="modal-buttons">
+            <button class="modal-btn cancel" onclick="closeDeleteModal()">Cancelar</button>
+            <button class="modal-btn delete" onclick="confirmDelete()">Apagar</button>
+        </div>
+    </div>
+</div>
+
 <div class="custom-checkin">
     <input type="text" class="custom-input" id="customActivity" placeholder="Ou digite sua própria atividade...">
     <button class="custom-btn" onclick="customCheckIn()">Registrar</button>

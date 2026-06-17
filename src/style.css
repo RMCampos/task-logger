@@ -143,12 +143,20 @@ h2 {
     padding-left: 4px;
 }
 
+.checkin-item-wrapper {
+    position: relative;
+    margin-bottom: 8px;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
 .checkin-item {
     background: #1c1c1e;
     border-radius: 12px;
     padding: 16px;
-    margin-bottom: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 1;
 }
 
 .checkin-time {
@@ -161,6 +169,36 @@ h2 {
 .checkin-activity {
     font-size: 17px;
     color: #ffffff;
+}
+
+.delete-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 80px;
+    background: #ff3b30;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+    z-index: 0;
+}
+
+.delete-btn span {
+    font-size: 26px;
+}
+
+.delete-btn:active {
+    background: #d62c21;
 }
 
 .empty-state {
@@ -290,6 +328,13 @@ h2 {
     font-size: 20px;
 }
 
+.modal-description {
+    color: #8e8e93;
+    font-size: 15px;
+    margin-bottom: 16px;
+    line-height: 1.4;
+}
+
 .modal-buttons {
     display: flex;
     gap: 12px;
@@ -313,6 +358,11 @@ h2 {
 
 .modal-btn.confirm {
     background: #007aff;
+    color: #ffffff;
+}
+
+.modal-btn.delete {
+    background: #ff3b30;
     color: #ffffff;
 }
 

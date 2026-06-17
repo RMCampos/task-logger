@@ -252,12 +252,18 @@ function renderHistory() {
         html += `<div class="day-section">`;
         html += `<div class="day-header">${formatDate(date)}</div>`;
         
-        dayCheckIns.forEach(checkIn => {
+        dayCheckIns.forEach((checkIn, index) => {
             const checkInDate = new Date(checkIn.timestamp);
+            const checkInId = `${checkIn.timestamp}-${index}`;
             html += `
-                <div class="checkin-item">
-                    <div class="checkin-time">${formatTime(checkInDate)}</div>
-                    <div class="checkin-activity">${checkIn.activity}</div>
+                <div class="checkin-item-wrapper" data-timestamp="${checkIn.timestamp}" data-index="${index}">
+                    <div class="checkin-item">
+                        <div class="checkin-time">${formatTime(checkInDate)}</div>
+                        <div class="checkin-activity">${checkIn.activity}</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteCheckIn('${checkIn.timestamp}', ${index})">
+                        <span>🗑️</span>
+                    </button>
                 </div>
             `;
         });
@@ -266,6 +272,9 @@ function renderHistory() {
     });
 
     historyList.innerHTML = html;
+    
+    // Initialize swipe for all check-in items
+    initSwipeGestures();
 }
 
 // Update current date
@@ -279,6 +288,102 @@ function updateCurrentDate() {
     document.getElementById('currentDate').textContent = dateStr;
 }
 
+// Delete check-in state
+let pendingDelete = null;
+
+// Delete check-in
+function deleteCheckIn(timestamp, index) {
+    pendingDelete = { timestamp, index };
+    const modal = document.getElementById('deleteModalOverlay');
+    modal.classList.add('show');
+}
+
+// Close delete modal
+function closeDeleteModal() {
+    const modal = document.getElementById('deleteModalOverlay');
+    modal.classList.remove('show');
+    pendingDelete = null;
+}
+
+// Confirm delete
+function confirmDelete() {
+    if (!pendingDelete) return;
+    
+    const checkIns = loadCheckIns();
+    const filteredCheckIns = checkIns.filter((checkIn, idx) => {
+        return !(checkIn.timestamp === pendingDelete.timestamp && idx === pendingDelete.index);
+    });
+    
+    saveCheckIns(filteredCheckIns);
+    closeDeleteModal();
+    renderHistory();
+    showToast('Check-in apagado');
+}
+
+// Initialize swipe gestures for all check-in items
+function initSwipeGestures() {
+    const wrappers = document.querySelectorAll('.checkin-item-wrapper');
+    
+    wrappers.forEach(wrapper => {
+        let startX = 0;
+        let currentX = 0;
+        let isSwiping = false;
+        const item = wrapper.querySelector('.checkin-item');
+        const deleteBtn = wrapper.querySelector('.delete-btn');
+        
+        wrapper.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            currentX = startX;
+            isSwiping = true;
+        }, { passive: true });
+        
+        wrapper.addEventListener('touchmove', (e) => {
+            if (!isSwiping) return;
+            
+            currentX = e.touches[0].clientX;
+            const diffX = currentX - startX;
+            
+            // Only allow left swipe (negative diff)
+            if (diffX < 0) {
+                const translateX = Math.max(diffX, -80);
+                item.style.transform = `translateX(${translateX}px)`;
+                item.style.transition = 'none';
+            }
+        }, { passive: true });
+        
+        wrapper.addEventListener('touchend', (e) => {
+            if (!isSwiping) return;
+            isSwiping = false;
+            
+            const diffX = currentX - startX;
+            
+            // If swiped more than 40px left, show delete button
+            if (diffX < -40) {
+                item.style.transform = 'translateX(-80px)';
+                item.style.transition = 'transform 0.3s ease';
+                deleteBtn.style.opacity = '1';
+                deleteBtn.style.visibility = 'visible';
+            } else {
+                // Swipe back to normal
+                item.style.transform = 'translateX(0)';
+                item.style.transition = 'transform 0.3s ease';
+                deleteBtn.style.opacity = '0';
+                deleteBtn.style.visibility = 'hidden';
+            }
+        });
+        
+        // Click outside to close
+        document.addEventListener('click', (e) => {
+            if (!wrapper.contains(e.target)) {
+                item.style.transform = 'translateX(0)';
+                item.style.transition = 'transform 0.3s ease';
+                deleteBtn.style.opacity = '0';
+                deleteBtn.style.visibility = 'hidden';
+            }
+        });
+    });
+}
+
 // Make functions globally accessible for inline onclick handlers
 window.quickCheckIn = quickCheckIn;
 window.customCheckIn = customCheckIn;
@@ -286,6 +391,9 @@ window.clearHistory = clearHistory;
 window.feelingCheckIn = feelingCheckIn;
 window.closeModal = closeModal;
 window.submitFeeling = submitFeeling;
+window.deleteCheckIn = deleteCheckIn;
+window.closeDeleteModal = closeDeleteModal;
+window.confirmDelete = confirmDelete;
 
 // Allow Enter key for custom check-in
 document.getElementById('customActivity').addEventListener('keypress', function(e) {
