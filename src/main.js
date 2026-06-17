@@ -308,12 +308,12 @@ function closeDeleteModal() {
 // Confirm delete
 function confirmDelete() {
     if (!pendingDelete) return;
-    
+
     const checkIns = loadCheckIns();
-    const filteredCheckIns = checkIns.filter((checkIn, idx) => {
-        return !(checkIn.timestamp === pendingDelete.timestamp && idx === pendingDelete.index);
+    const filteredCheckIns = checkIns.filter((checkIn) => {
+        return checkIn.timestamp !== pendingDelete.timestamp;
     });
-    
+
     saveCheckIns(filteredCheckIns);
     closeDeleteModal();
     renderHistory();
