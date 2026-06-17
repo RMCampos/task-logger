@@ -1,70 +1,70 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
-    <title>Check-In</title>
+    <title>Check-in</title>
     <link rel="icon" type="image/svg+xml" href="/icon.svg">
     <link rel="stylesheet" href="/src/style.css">
 </head>
 <body>
     <div class="header">
-        <h1>Check-In</h1>
+        <h1>Check-in</h1>
         <div class="date" id="currentDate"></div>
     </div>
 
 <div class="activity-section">
-    <h2 class="group-header">Timeline</h2>
+    <h2 class="group-header">Atividades</h2>
     <div class="activities">
-        <button class="activity-btn" onclick="quickCheckIn('🛏️ Woke Up')">🛏️ Woke Up</button>
-        <button class="activity-btn" onclick="quickCheckIn('🧘 Did meditation')">🧘 Did meditation</button>
-        <button class="activity-btn" onclick="quickCheckIn('💪 Arrived at Gym')">💪 Arrived at Gym</button>
-        <button class="activity-btn" onclick="quickCheckIn('💪 Left Gym')">💪 Left Gym</button>
-	<button class="activity-btn" onclick="quickCheckIn('🤸 Did workout')">Did workout</button>
-        <button class="activity-btn" onclick="quickCheckIn('🍳 Had Breakfast')">🍳 Had Breakfast</button>
-        <button class="activity-btn" onclick="quickCheckIn('🪑 Arrived at my desk')">🪑 Arrived at my desk</button>
-        <button class="activity-btn" onclick="quickCheckIn('🍽️ Had Lunch')">🍽️ Had Lunch</button>
-        <button class="activity-btn" onclick="quickCheckIn('🍎 Had afternoon break')">🍎 Had afternoon break</button>
-        <button class="activity-btn" onclick="quickCheckIn('💼 Left work')">💼 Left work</button>
-        <button class="activity-btn" onclick="quickCheckIn('🍷 Had Dinner')">🍷 Had Dinner</button>
-        <button class="activity-btn" onclick="quickCheckIn('😴 Went to Bed')">😴 Went to Bed</button>
-        <button class="activity-btn" onclick="quickCheckIn('☕ Had a coffee')">☕ Had a coffee</button>
+        <button class="activity-btn" onclick="quickCheckIn('🛏️ Woke Up')">🛏️ Levantei da cama</button>
+        <button class="activity-btn" onclick="quickCheckIn('🧘 Did meditation')">🧘 Meditei</button>
+        <button class="activity-btn" onclick="quickCheckIn('💪 Arrived at Gym')">💪 Cheguei na academia</button>
+        <button class="activity-btn" onclick="quickCheckIn('💪 Left Gym')">💪 Saí da academia Gym</button>
+	    <button class="activity-btn" onclick="quickCheckIn('🤸 Treinei')">🤸 Treinei</button>
+        <button class="activity-btn" onclick="quickCheckIn('🍳 Had Breakfast')">🍳 Tomei café da manhã</button>
+        <button class="activity-btn" onclick="quickCheckIn('🪑 Arrived at my desk')">🪑 Cheguei na minha mesa</button>
+        <button class="activity-btn" onclick="quickCheckIn('🍽️ Had Lunch')">🍽️ Almocei</button>
+        <button class="activity-btn" onclick="quickCheckIn('🍎 Had afternoon break')">🍎 Tomei café da tarde</button>
+        <button class="activity-btn" onclick="quickCheckIn('💼 Left work')">💼 Saí do trabalho</button>
+        <button class="activity-btn" onclick="quickCheckIn('🍷 Had Dinner')">🍷 Jantei</button>
+        <button class="activity-btn" onclick="quickCheckIn('😴 Went to Bed')">😴 Fui dormir</button>
+        <button class="activity-btn" onclick="quickCheckIn('☕ Had a coffee')">☕ Tomei café</button>
     </div>
 </div>
 
 <div class="activity-section">
-    <h2 class="group-header">Feeling</h2>
+    <h2 class="group-header">Humor</h2>
     <div class="activities">
-        <button class="activity-btn" onclick="feelingCheckIn('😊 Happy')">😊 Happy</button>
-        <button class="activity-btn" onclick="feelingCheckIn('😢 Sad')">😢 Sad</button>
-        <button class="activity-btn" onclick="feelingCheckIn('😠 Frustrated')">😠 Frustrated</button>
-        <button class="activity-btn" onclick="feelingCheckIn('😰 Anxious')">😰 Anxious</button>
-        <button class="activity-btn" onclick="feelingCheckIn('🤩 Excited')">🤩 Excited</button>
+        <button class="activity-btn" onclick="feelingCheckIn('😊 Happy')">😊 Feliz</button>
+        <button class="activity-btn" onclick="feelingCheckIn('😢 Sad')">😢 Triste</button>
+        <button class="activity-btn" onclick="feelingCheckIn('😠 Frustrated')">😠 Frustrado</button>
+        <button class="activity-btn" onclick="feelingCheckIn('😰 Anxious')">😰 Ansioso</button>
+        <button class="activity-btn" onclick="feelingCheckIn('🤩 Excited')">🤩 Empolgado</button>
     </div>
 </div>
 
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
-        <h3 id="modalTitle">How are you feeling?</h3>
-        <input type="text" id="feelingReason" class="custom-input" placeholder="Optional: Why are you feeling this way?">
+        <h3 id="modalTitle">Como você está se sentindo?</h3>
+        <input type="text" id="feelingReason" class="custom-input" placeholder="Opcional: por que esse sentimento?">
         <div class="modal-buttons">
-            <button class="modal-btn cancel" onclick="closeModal()">Skip</button>
-            <button class="modal-btn confirm" onclick="submitFeeling()">Save</button>
+            <button class="modal-btn cancel" onclick="closeModal()">Pular</button>
+            <button class="modal-btn confirm" onclick="submitFeeling()">Salvar</button>
         </div>
     </div>
 </div>
 
 <div class="custom-checkin">
-    <input type="text" class="custom-input" id="customActivity" placeholder="Or type your own activity...">
-    <button class="custom-btn" onclick="customCheckIn()">Check In</button>
+    <input type="text" class="custom-input" id="customActivity" placeholder="Ou digite sua própria atividade...">
+    <button class="custom-btn" onclick="customCheckIn()">Registrar</button>
 </div>
 
 <div class="history">
     <div class="history-header">
-        <h2>Last 30 Days</h2>
-        <button class="clear-btn" onclick="clearHistory()">Clear All</button>
+        <h2>Últimos 30 dias</h2>
+        <button class="clear-btn" onclick="clearHistory()">Limpar tudo</button>
     </div>
     <div id="historyList"></div>
 </div>
@@ -73,8 +73,8 @@
 
   <div class="update-notification" id="updateNotification">
     <div class="update-content">
-      <span class="update-message">New version available!</span>
-      <button class="update-btn" id="updateBtn">Reload</button>
+      <span class="update-message">Nova versão disponível!</span>
+      <button class="update-btn" id="updateBtn">Atualizar</button>
       <button class="update-dismiss" id="dismissBtn">×</button>
     </div>
   </div>

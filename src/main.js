@@ -83,7 +83,7 @@ function feelingCheckIn(feeling) {
     const title = document.getElementById('modalTitle');
     const input = document.getElementById('feelingReason');
     
-    title.textContent = `How are you feeling? (${feeling})`;
+    title.textContent = `Como você está se sentindo? (${feeling})`;
     input.value = '';
     modal.classList.add('show');
     
@@ -115,7 +115,7 @@ function submitFeeling() {
 // Quick check-in with preset activity
 function quickCheckIn(activity) {
     // If it's "Woke Up", clear yesterday's tracking
-    if (activity === '🛏️ Woke Up') {
+    if (activity.startsWith('🛏️ Acordei')) {
         clearClickedButtons();
         // Update all buttons to remove grayed state
         document.querySelectorAll('.activity-btn').forEach(btn => {
@@ -162,15 +162,14 @@ function customCheckIn() {
     saveCheckIns(checkIns);
     input.value = '';
     renderHistory();
-    showToast('Checked in!');
+    showToast('Registrado!');
 }
 
-// Clear all history
 function clearHistory() {
-    if (confirm('Delete all check-ins?')) {
+    if (confirm('Apagar tudo?')) {
         localStorage.removeItem('checkIns');
         renderHistory();
-        showToast('History cleared');
+        showToast('Histórico limpo');
     }
 }
 
@@ -183,11 +182,11 @@ function formatDate(date) {
     const dateStr = date.toDateString();
     
     if (dateStr === today.toDateString()) {
-        return 'Today';
+        return 'Hoje';
     } else if (dateStr === yesterday.toDateString()) {
-        return 'Yesterday';
+        return 'Ontem';
     } else {
-        return date.toLocaleDateString('en-US', { 
+        return date.toLocaleDateString('pt-BR', { 
             weekday: 'long', 
             month: 'short', 
             day: 'numeric' 
@@ -197,10 +196,10 @@ function formatDate(date) {
 
 // Format time
 function formatTime(date) {
-    return date.toLocaleTimeString('en-US', { 
+    return date.toLocaleTimeString('pt-BR', { 
         hour: 'numeric', 
         minute: '2-digit',
-        hour12: true 
+        hour12: false 
     });
 }
 
@@ -218,7 +217,7 @@ function renderHistory() {
     });
 
     if (recentCheckIns.length === 0) {
-        historyList.innerHTML = '<div class="empty-state">No check-ins yet. Tap a button above to get started!</div>';
+        historyList.innerHTML = '<div class="empty-state">Nada ainda. Toque num botão acima pra começar!</div>';
         return;
     }
 
@@ -272,7 +271,7 @@ function renderHistory() {
 // Update current date
 function updateCurrentDate() {
     const now = new Date();
-    const dateStr = now.toLocaleDateString('en-US', { 
+    const dateStr = now.toLocaleDateString('pt-BR', { 
         weekday: 'long', 
         month: 'long', 
         day: 'numeric' 
