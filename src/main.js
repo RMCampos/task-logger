@@ -395,6 +395,19 @@ window.deleteCheckIn = deleteCheckIn;
 window.closeDeleteModal = closeDeleteModal;
 window.confirmDelete = confirmDelete;
 
+function openInfoModal() {
+    const modal = document.getElementById('infoModalOverlay');
+    modal.classList.add('show');
+}
+
+function closeInfoModal() {
+    const modal = document.getElementById('infoModalOverlay');
+    modal.classList.remove('show');
+}
+
+window.openInfoModal = openInfoModal;
+window.closeInfoModal = closeInfoModal;
+
 // Allow Enter key for custom check-in
 document.getElementById('customActivity').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {

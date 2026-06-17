@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>Check-in</h1>
+        <h1>Check-in <span class="info-icon" onclick="openInfoModal()">ℹ️</span></h1>
         <div class="date" id="currentDate"></div>
     </div>
 
@@ -64,6 +64,22 @@
         <div class="modal-buttons">
             <button class="modal-btn cancel" onclick="closeDeleteModal()">Cancelar</button>
             <button class="modal-btn delete" onclick="confirmDelete()">Apagar</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="infoModalOverlay">
+    <div class="modal">
+        <h3>Sobre o Check-in</h3>
+        <p class="modal-description" id="infoModalContent">
+            Este é um aplicativo para registro diário de atividades e também de emoções, humores.
+            <br><br>
+            Use os botões para registrar suas atividades ou adicione atividades personalizadas.
+            <br><br>
+            Seus dados são armazenados localmente no seu dispositivo.
+        </p>
+        <div class="modal-buttons">
+            <button class="modal-btn confirm" onclick="closeInfoModal()">Fechar</button>
         </div>
     </div>
 </div>
