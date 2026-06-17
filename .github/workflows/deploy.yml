@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Build & Deploy to Pages
 
 on:
   push:
@@ -6,27 +6,27 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  APP_FOLDER: "task-logger"
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build-deploy:
+    runs-on: easynode-debian
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
         with:
-          node-version: '20'
-          cache: 'npm'
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
 
       - name: Install dependencies
         run: npm ci
@@ -34,21 +34,24 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+      - name: Install rsync + ssh client
+        run: apt-get update -qq && apt-get install -y -qq rsync openssh-client
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './dist'
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Ensure destination folder exists
+        run: |
+          ssh -i ~/.ssh/deploy_key deploy@${{ secrets.DEPLOY_HOST }} \
+            "mkdir -p /srv/sites/${{ env.APP_FOLDER }} && chmod 755 /srv/sites/${{ env.APP_FOLDER }}"
+
+      - name: Upload site
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key" \
+            ./dist/ deploy@${{ secrets.DEPLOY_HOST }}:/srv/sites/${{ env.APP_FOLDER }}/
+

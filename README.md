@@ -11,6 +11,12 @@ A Progressive Web App for tracking daily activities with timestamped check-ins. 
 - Installable on mobile and desktop
 - Dark mode interface
 
+## Live Demo
+
+The app is deployed to Pages and available at:
+
+**https://task-logger.lightroasted.vps-kinghost.net**
+
 ## Development
 
 Install dependencies:
@@ -31,31 +37,6 @@ npm run build
 Preview production build:
 ```bash
 npm run preview
-```
-
-## Deployment to GitHub Pages
-
-This project is configured to automatically deploy to GitHub Pages using GitHub Actions.
-
-### Setup Instructions
-
-1. Go to your repository settings on GitHub
-2. Navigate to **Settings** → **Pages**
-3. Under **Source**, select **GitHub Actions**
-4. Push your changes to the `main` branch
-
-The workflow will automatically:
-- Build the app on every push to `main`
-- Deploy to GitHub Pages
-- Make it available at `https://[username].github.io/task-logger/`
-
-### Manual Deployment
-
-If you prefer to deploy manually:
-
-```bash
-npm run build
-# Then commit and push the dist folder, or use gh-pages branch
 ```
 
 ## Tech Stack
