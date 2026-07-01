@@ -1,3 +1,87 @@
+const MOOD_DELTAS = {
+    '😊 Feliz': 2,
+    '🤩 Empolgado': 3,
+    '😰 Ansioso': -1,
+    '😢 Triste': -2,
+    '😠 Frustrado': -2,
+    '😡 Bravo': -3,
+    '☕ Tomei café': 2,
+    '🤸 Treinei': 2,
+};
+
+const MOOD_STATES = {
+    ecstatic: {
+        mouth:      'M 25,60 C 35,78 65,78 75,60',
+        browLeft:   'M 22,26 Q 33,20 43,24',
+        browRight:  'M 57,24 Q 67,20 78,26',
+        cheeks: 0.45,
+        label: 'Empolgadíssimo!'
+    },
+    happy: {
+        mouth:      'M 30,62 C 38,73 62,73 70,62',
+        browLeft:   'M 22,28 Q 33,24 43,27',
+        browRight:  'M 57,27 Q 67,24 78,28',
+        cheeks: 0,
+        label: 'Feliz'
+    },
+    neutral: {
+        mouth:      'M 32,65 C 42,65 58,65 68,65',
+        browLeft:   'M 22,30 Q 32,30 43,30',
+        browRight:  'M 57,30 Q 67,30 78,30',
+        cheeks: 0,
+        label: 'Neutro'
+    },
+    sad: {
+        mouth:      'M 30,70 C 38,60 62,60 70,70',
+        browLeft:   'M 22,33 Q 33,27 43,31',
+        browRight:  'M 57,31 Q 67,27 78,33',
+        cheeks: 0,
+        label: 'Triste'
+    },
+    'very-sad': {
+        mouth:      'M 25,74 C 35,60 65,60 75,74',
+        browLeft:   'M 22,26 Q 33,30 43,35',
+        browRight:  'M 57,35 Q 67,30 78,26',
+        cheeks: 0,
+        label: 'Muito mal'
+    },
+};
+
+function loadMoodScore() {
+    const stored = localStorage.getItem('moodScore');
+    return stored !== null ? parseInt(stored, 10) : 0;
+}
+
+function saveMoodScore(score) {
+    localStorage.setItem('moodScore', String(score));
+}
+
+function getMoodState(score) {
+    if (score > 6)  return 'ecstatic';
+    if (score >= 2) return 'happy';
+    if (score >= -1) return 'neutral';
+    if (score >= -5) return 'sad';
+    return 'very-sad';
+}
+
+function applyMoodDelta(feeling) {
+    const delta = MOOD_DELTAS[feeling];
+    if (delta === undefined) return;
+    const score = Math.max(-10, Math.min(10, loadMoodScore() + delta));
+    saveMoodScore(score);
+    renderAvatar();
+}
+
+function renderAvatar() {
+    const state = MOOD_STATES[getMoodState(loadMoodScore())];
+    document.getElementById('mouthPath').setAttribute('d', state.mouth);
+    document.getElementById('browLeft').setAttribute('d', state.browLeft);
+    document.getElementById('browRight').setAttribute('d', state.browRight);
+    document.getElementById('cheekLeft').setAttribute('opacity', state.cheeks);
+    document.getElementById('cheekRight').setAttribute('opacity', state.cheeks);
+    document.getElementById('moodLabel').textContent = state.label;
+}
+
 // Load check-ins from localStorage
 function loadCheckIns() {
     const stored = localStorage.getItem('checkIns');
@@ -38,7 +122,7 @@ function getTodayDateString() {
     return now.toISOString().split('T')[0];
 }
 
-// Clear clicked buttons tracking (called when "Woke Up" is clicked)
+// Clear clicked buttons tracking (called when "Levantei da cama" is clicked)
 function clearClickedButtons() {
     const emptyData = { date: getTodayDateString(), clicked: [] };
     saveClickedButtons(emptyData);
@@ -103,18 +187,19 @@ function submitFeeling() {
     const input = document.getElementById('feelingReason');
     const reason = input.value.trim();
     let activity = selectedFeeling;
-    
+
     if (reason) {
         activity = `${selectedFeeling} - ${reason}`;
     }
-    
+
+    applyMoodDelta(selectedFeeling);
     quickCheckIn(activity);
     closeModal();
 }
 
 // Quick check-in with preset activity
 function quickCheckIn(activity) {
-    // If it's "Woke Up", clear yesterday's tracking
+    // If it's "Levantei da cama", clear yesterday's tracking
     if (activity.startsWith('🛏️ Acordei')) {
         clearClickedButtons();
         // Update all buttons to remove grayed state
@@ -122,6 +207,8 @@ function quickCheckIn(activity) {
             btn.classList.remove('clicked');
         });
     }
+
+    applyMoodDelta(activity);
 
     // Save the check-in
     const checkIns = loadCheckIns();
@@ -426,6 +513,7 @@ document.getElementById('feelingReason').addEventListener('keypress', function(e
 updateCurrentDate();
 renderHistory();
 restoreClickedStates();
+renderAvatar();
 
 // PWA Update handling
 if ('serviceWorker' in navigator) {

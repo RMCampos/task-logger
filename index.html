@@ -15,34 +15,49 @@
         <div class="date" id="currentDate"></div>
     </div>
 
+<div class="avatar-container">
+    <svg id="moodAvatar" width="90" height="90" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="46" fill="#FFD700" />
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#E6B800" stroke-width="2" />
+        <circle id="cheekLeft"  cx="24" cy="60" r="9" fill="#FFB3BA" opacity="0" />
+        <circle id="cheekRight" cx="76" cy="60" r="9" fill="#FFB3BA" opacity="0" />
+        <ellipse cx="36" cy="44" rx="5" ry="6" fill="#333" />
+        <ellipse cx="64" cy="44" rx="5" ry="6" fill="#333" />
+        <path id="browLeft"   d="M 22,30 Q 32,30 43,30" fill="none" stroke="#333" stroke-width="3.5" stroke-linecap="round" />
+        <path id="browRight"  d="M 57,30 Q 67,30 78,30" fill="none" stroke="#333" stroke-width="3.5" stroke-linecap="round" />
+        <path id="mouthPath"  d="M 32,65 C 42,65 58,65 68,65" fill="none" stroke="#333" stroke-width="3.5" stroke-linecap="round" />
+    </svg>
+    <div class="mood-label" id="moodLabel">Neutro</div>
+</div>
+
 <div class="activity-section">
     <h2 class="group-header">Atividades</h2>
     <div class="activities">
-        <button class="activity-btn" onclick="quickCheckIn('🛏️ Woke Up')">🛏️ Levantei da cama</button>
-        <button class="activity-btn" onclick="quickCheckIn('🧘 Did meditation')">🧘 Meditei</button>
-        <button class="activity-btn" onclick="quickCheckIn('💪 Arrived at Gym')">💪 Cheguei na academia</button>
-        <button class="activity-btn" onclick="quickCheckIn('💪 Left Gym')">💪 Saí da academia Gym</button>
+        <button class="activity-btn" onclick="quickCheckIn('🛏️ Levantei da cama')">🛏️ Levantei da cama</button>
+        <button class="activity-btn" onclick="quickCheckIn('🧘 Meditei')">🧘 Meditei</button>
+        <button class="activity-btn" onclick="quickCheckIn('💪 Cheguei na academia')">💪 Cheguei na academia</button>
+        <button class="activity-btn" onclick="quickCheckIn('💪 Saí da academia')">💪 Saí da academia</button>
 	    <button class="activity-btn" onclick="quickCheckIn('🤸 Treinei')">🤸 Treinei</button>
-        <button class="activity-btn" onclick="quickCheckIn('🍳 Had Breakfast')">🍳 Tomei café da manhã</button>
-        <button class="activity-btn" onclick="quickCheckIn('🪑 Arrived at my desk')">🪑 Cheguei na minha mesa</button>
-        <button class="activity-btn" onclick="quickCheckIn('🍽️ Had Lunch')">🍽️ Almocei</button>
-        <button class="activity-btn" onclick="quickCheckIn('🍎 Had afternoon break')">🍎 Tomei café da tarde</button>
-        <button class="activity-btn" onclick="quickCheckIn('💼 Left work')">💼 Saí do trabalho</button>
-        <button class="activity-btn" onclick="quickCheckIn('🍷 Had Dinner')">🍷 Jantei</button>
-        <button class="activity-btn" onclick="quickCheckIn('😴 Went to Bed')">😴 Fui dormir</button>
-        <button class="activity-btn" onclick="quickCheckIn('☕ Had a coffee')">☕ Tomei café</button>
+        <button class="activity-btn" onclick="quickCheckIn('🍳 Tomei café da manhã')">🍳 Tomei café da manhã</button>
+        <button class="activity-btn" onclick="quickCheckIn('🪑 Cheguei na minha mesa')">🪑 Cheguei na minha mesa</button>
+        <button class="activity-btn" onclick="quickCheckIn('🍽️ Almocei')">🍽️ Almocei</button>
+        <button class="activity-btn" onclick="quickCheckIn('🍎 Tomei café da tarde')">🍎 Tomei café da tarde</button>
+        <button class="activity-btn" onclick="quickCheckIn('💼 Saí do trabalho')">💼 Saí do trabalho</button>
+        <button class="activity-btn" onclick="quickCheckIn('🍷 Jantei')">🍷 Jantei</button>
+        <button class="activity-btn" onclick="quickCheckIn('😴 Fui dormir')">😴 Fui dormir</button>
+        <button class="activity-btn" onclick="quickCheckIn('☕ Tomei café')">☕ Tomei café</button>
     </div>
 </div>
 
 <div class="activity-section">
     <h2 class="group-header">Humor</h2>
     <div class="activities">
-        <button class="activity-btn" onclick="feelingCheckIn('😊 Happy')">😊 Feliz</button>
-        <button class="activity-btn" onclick="feelingCheckIn('😢 Sad')">😢 Triste</button>
-        <button class="activity-btn" onclick="feelingCheckIn('😠 Frustrated')">😠 Frustrado</button>
-        <button class="activity-btn" onclick="feelingCheckIn('😰 Anxious')">😰 Ansioso</button>
-        <button class="activity-btn" onclick="feelingCheckIn('🤩 Excited')">🤩 Empolgado</button>
-        <button class="activity-btn" onclick="feelingCheckIn('😡 Angry')">😡 Bravo</button>
+        <button class="activity-btn" onclick="feelingCheckIn('😊 Feliz')">😊 Feliz</button>
+        <button class="activity-btn" onclick="feelingCheckIn('😢 Triste')">😢 Triste</button>
+        <button class="activity-btn" onclick="feelingCheckIn('😠 Frustrado')">😠 Frustrado</button>
+        <button class="activity-btn" onclick="feelingCheckIn('😰 Ansioso')">😰 Ansioso</button>
+        <button class="activity-btn" onclick="feelingCheckIn('🤩 Empolgado')">🤩 Empolgado</button>
+        <button class="activity-btn" onclick="feelingCheckIn('😡 Bravo')">😡 Bravo</button>
     </div>
 </div>
 
